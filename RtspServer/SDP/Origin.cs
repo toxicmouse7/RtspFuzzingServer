@@ -1,4 +1,4 @@
-﻿namespace RtspServer.SessionDescriptionProtocol;
+﻿namespace RtspServer.SDP;
 
 public class Origin
 {

@@ -1,0 +1,3 @@
+﻿<Solution>
+  <Project Path="RtspServer\RtspServer.csproj" Type="Classic C#" />
+</Solution>

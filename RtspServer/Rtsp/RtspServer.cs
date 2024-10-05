@@ -8,19 +8,14 @@ namespace RtspServer.Rtsp;
 public class RtspServer : BackgroundService
 {
     private readonly TcpListener _tcpListener = new(IPAddress.Parse("127.0.0.1"), 9000);
-    private readonly RtspRequestParser _requestParser;
-    private readonly RtspRequestHandler _requestHandler;
     private readonly ILogger<RtspServer> _logger;
     private readonly RtspClientContext.Factory _rtspClientContextFactory;
 
-    public RtspServer(ILogger<RtspServer> logger,
-        RtspRequestParser requestParser,
-        RtspRequestHandler requestHandler,
+    public RtspServer(
+        ILogger<RtspServer> logger,
         RtspClientContext.Factory rtspClientContextFactory)
     {
         _logger = logger;
-        _requestParser = requestParser;
-        _requestHandler = requestHandler;
         _rtspClientContextFactory = rtspClientContextFactory;
     }
 

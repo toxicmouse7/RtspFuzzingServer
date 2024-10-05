@@ -1,4 +1,6 @@
-﻿namespace RtspServer.Rtsp;
+﻿using RtspServer.SDP;
+
+namespace RtspServer.Rtsp;
 
 public class RtspRequestHandler
 {
@@ -27,6 +29,10 @@ public class RtspRequestHandler
 
     private Task<string> HandleDescribeAsync(RtspRequest rtspRequest)
     {
+        var sdp = new SessionDescriptionProtocol(
+            new Origin("255.255.123.123"),
+            new Media(5050));
+        
         return Task.FromResult(
             "RTSP/1.0 200 OK\r\n" +
             $"CSeq: {rtspRequest.Headers.First(h => h.Key == "CSeq").Value}\r\n" +
