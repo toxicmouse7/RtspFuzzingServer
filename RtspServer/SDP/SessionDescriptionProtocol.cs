@@ -13,4 +13,14 @@ public class SessionDescriptionProtocol
     public const string Time = "0 0";
     public Origin Origin { get; }
     public Media Media { get; }
+
+    public override string ToString()
+    {
+        return $"v={ProtocolVersion}\r\n" +
+               $"o={Origin}\r\n" +
+               $"s={SessionName}\r\n" +
+               $"t={Time}\r\n" +
+               $"a=recvonly\r\n" +
+               $"m={Media}\r\n";
+    }
 }

@@ -4,5 +4,6 @@ public enum RtspRequestMethod
 {
     Undefined = 0,
     Options,
-    Describe
+    Describe,
+    Setup
 }

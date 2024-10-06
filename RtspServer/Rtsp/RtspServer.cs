@@ -7,7 +7,7 @@ namespace RtspServer.Rtsp;
 
 public class RtspServer : BackgroundService
 {
-    private readonly TcpListener _tcpListener = new(IPAddress.Parse("127.0.0.1"), 9000);
+    private readonly TcpListener _tcpListener = new(IPAddress.Any, 9000);
     private readonly ILogger<RtspServer> _logger;
     private readonly RtspClientContext.Factory _rtspClientContextFactory;
 

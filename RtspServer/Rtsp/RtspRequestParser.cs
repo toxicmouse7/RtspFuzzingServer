@@ -36,7 +36,7 @@ public sealed class RtspRequestParser
         
         if (!Enum.TryParse<RtspRequestMethod>(requestLineParts[0], true, out var method))
         {
-            _logger.LogError("Unsupported RTSP request method");
+            _logger.LogError("Unsupported RTSP request method: {method}", requestLineParts[0]);
             throw new FormatException("Invalid RTSP request");
         }
         

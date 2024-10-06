@@ -7,22 +7,22 @@ public class Origin
     public string Username { get; }
     public int SessionId { get; }
     public int SessionVersion { get; }
-    public string UnicastAddress { get; }
+    public string Address { get; }
 
-    public Origin(string username, string unicastAddress)
+    public Origin(string username, string address)
     {
         Username = username;
         SessionId = Random.Shared.Next(1000000000, 1999999999);
         SessionVersion = SessionId;
-        UnicastAddress = unicastAddress;
+        Address = address;
     }
 
-    public Origin(string unicastAddress) : this("-", unicastAddress)
+    public Origin(string address) : this("-", address)
     {
     }
 
     public override string ToString()
     {
-        return $"{Username} {SessionId} {SessionVersion} {NetworkType} {AddressType} {UnicastAddress}";
+        return $"{Username} {SessionId} {SessionVersion} {NetworkType} {AddressType} {Address}";
     }
 }
