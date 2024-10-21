@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Hosting;
+using RtspServer.Abstract;
 using RtspServer.Rtsp;
+using RtspServer.Services;
 
 namespace RtspServer.Configuration.AutofacModules;
 
@@ -22,5 +24,9 @@ public class RtspModule : Module
         
         builder.RegisterType<RtspController.RtspController>()
             .AsSelf();
+
+        builder.RegisterType<SessionService>()
+            .As<ISessionService>()
+            .SingleInstance();
     }
 }

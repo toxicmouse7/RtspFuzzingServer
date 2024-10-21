@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Logging;
 
@@ -30,7 +31,7 @@ public sealed class RtspRequestParser
         var requestLineParts = lines[0].Split(' ');
         if (requestLineParts.Length != 3)
         {
-            _logger.LogError("Invalid RTSP request");
+            _logger.LogError("Invalid RTSP request. Request: {request}", rawRequest);
             throw new FormatException("Invalid RTSP request");
         }
         
@@ -54,7 +55,9 @@ public sealed class RtspRequestParser
             var headerValue = line[(colonIndex + 1)..].Trim();
             headers[headerName] = headerValue;
         }
+
+        var ip = (IPEndPoint)stream.Socket.RemoteEndPoint!;
         
-        return new RtspRequest(method, uri, version, headers);
+        return new RtspRequest(method, uri, version, ip.Address.ToString(), headers);
     }
 }
