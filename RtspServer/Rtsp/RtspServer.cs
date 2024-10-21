@@ -1,7 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RtspServer.RtspController;
 
 namespace RtspServer.Rtsp;
 
@@ -9,14 +12,14 @@ public class RtspServer : BackgroundService
 {
     private readonly TcpListener _tcpListener = new(IPAddress.Any, 9000);
     private readonly ILogger<RtspServer> _logger;
-    private readonly RtspClientContext.Factory _rtspClientContextFactory;
+    private readonly RtspConnectionContext.Factory _rtspConnectionContextFactory;
 
     public RtspServer(
         ILogger<RtspServer> logger,
-        RtspClientContext.Factory rtspClientContextFactory)
+        RtspConnectionContext.Factory rtspConnectionContextFactory)
     {
         _logger = logger;
-        _rtspClientContextFactory = rtspClientContextFactory;
+        _rtspConnectionContextFactory = rtspConnectionContextFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -31,7 +34,7 @@ public class RtspServer : BackgroundService
 
             _ = Task.Factory.StartNew(async () =>
             {
-                var rtspClientContext = _rtspClientContextFactory(client, stoppingToken);
+                var rtspClientContext = _rtspConnectionContextFactory(client, stoppingToken);
                 await rtspClientContext.ServeAsync();
             }, stoppingToken);
         }

@@ -17,11 +17,10 @@ public class RtspModule : Module
             .AsSelf()
             .SingleInstance();
 
-        builder.RegisterType<RtspRequestHandler>()
-            .AsSelf()
-            .SingleInstance();
-
-        builder.RegisterType<RtspClientContext>()
+        builder.RegisterType<RtspConnectionContext>()
+            .AsSelf();
+        
+        builder.RegisterType<RtspController.RtspController>()
             .AsSelf();
     }
 }

@@ -1,12 +1,14 @@
 ﻿namespace RtspServer.Rtsp;
 
 public sealed class RtspRequest(
-    RtspRequestMethod method, string uri, string protocol, Dictionary<string, string> headers)
+    string method, string uri, string protocol, Dictionary<string, string> headers)
 {
-    public RtspRequestMethod Method { get; } = method;
+    public string Method { get; } = method;
     public string Uri { get; } = uri;
     public string Protocol { get; } = protocol;
     public Dictionary<string, string> Headers { get; } = headers;
+    
+    public string CSeq => Headers["CSeq"];
 
     public override string ToString()
     {
