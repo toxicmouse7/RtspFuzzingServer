@@ -33,6 +33,7 @@ builder.ConfigureContainer(
     containerBuilder =>
     {
         containerBuilder.RegisterModule<RtspModule>();
+        containerBuilder.RegisterModule<RtpModule>();
     });
 
 var app = builder.Build();

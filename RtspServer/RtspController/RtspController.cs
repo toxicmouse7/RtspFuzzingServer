@@ -12,10 +12,14 @@ namespace RtspServer.RtspController;
 public class RtspController : RtspControllerBase
 {
     private readonly ISessionService _sessionService;
+    private readonly IRTPStreamingService _rtpStreamingService;
 
-    public RtspController(ISessionService sessionService)
+    public RtspController(
+        ISessionService sessionService,
+        IRTPStreamingService rtpStreamingService)
     {
         _sessionService = sessionService;
+        _rtpStreamingService = rtpStreamingService;
     }
     
     [RtspDescribe]
@@ -37,7 +41,7 @@ public class RtspController : RtspControllerBase
             return NotImplemented();
         }
         
-        var transportOptions = request.Headers["Trasport"]
+        var transportOptions = request.Headers["Transport"]
             .Split(';');
         
         var clientPort = transportOptions
@@ -62,17 +66,23 @@ public class RtspController : RtspControllerBase
     public IRtspResponse Play(RtspRequest request)
     {
         var session = _sessionService.GetSession(Convert.ToInt64(request.Headers["Session"]));
+
+        _rtpStreamingService.StartRTPStream(session);
         
         return Ok();
     }
 
     [RtspTeardown]
-    public IRtspResponse Teardown()
+    public IRtspResponse Teardown(RtspRequest request)
     {
+        var session = _sessionService.GetSession(Convert.ToInt64(request.Headers["Session"]));
+        
+        _rtpStreamingService.StopRTPStream(session);
+        
         return Ok();
     }
 
-    private static string GetLocalIPAddress()
+    private static string GetLocalIPAddress() // 91 92 91
     {
         var host = Dns.GetHostEntry(Dns.GetHostName());
         foreach (var ipAddress in host.AddressList)
