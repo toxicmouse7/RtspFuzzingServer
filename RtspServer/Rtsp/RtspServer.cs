@@ -32,6 +32,7 @@ public class RtspServer : BackgroundService
         {
             var client = await _tcpListener.AcceptTcpClientAsync(stoppingToken);
 
+            _logger.LogTrace("New client accepted");
             _ = Task.Factory.StartNew(async () =>
             {
                 var rtspClientContext = _rtspConnectionContextFactory(client, stoppingToken);

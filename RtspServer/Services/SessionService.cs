@@ -14,8 +14,18 @@ public class SessionService : ISessionService
         return session;
     }
 
-    public Session GetSession(long sessionId)
+    public Session? GetSession(long sessionId)
     {
-        return _sessions[sessionId];
+        return _sessions.TryGetValue(sessionId, out var session) ? session : null;
+    }
+
+    public IEnumerable<Session> GetSessions()
+    {
+        return _sessions.Values;
+    }
+
+    public void DeleteSession(long sessionId)
+    {
+        _sessions.Remove(sessionId);
     }
 }

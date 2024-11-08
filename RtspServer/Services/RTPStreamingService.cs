@@ -8,35 +8,40 @@ namespace RtspServer.Services;
 
 public class RTPStreamingService : IRTPStreamingService
 {
-    private readonly byte[] _jpeg;
+    private readonly IDataSource _dataSource;
     private readonly Dictionary<Session, CancellationTokenSource> _stoppingTokens = new();
     
-    public RTPStreamingService()
+    public RTPStreamingService(IDataSource dataSource)
     {
-        _jpeg = File.ReadAllBytes("Resources/image.jpeg");
+        _dataSource = dataSource;
     }
 
     public void StartRTPStream(Session session)
     {
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
         
-        Task.Run(() =>
+        Task.Factory.StartNew(async () =>
         {
             var endpoint = new IPEndPoint(IPAddress.Parse(session.Ip), (ushort)session.RtpPort);
             using var udpClient = new UdpClient();
             short packetsSend = 0;
-        
+
+            var x = 0;
             while (!cts.IsCancellationRequested)
             {
+                var unixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+                var rtpHeader = new RTPHeader((int)x, packetsSend);
                 var rtpPacket = new RTPPacket(
-                    (int)DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-                    packetsSend,
-                    _jpeg);
-                Console.WriteLine(udpClient.Send(rtpPacket.ToByteArray(), endpoint));
+                    rtpHeader,
+                    await _dataSource.GetStreamableDataAsync());
+                
+                udpClient.Send(rtpPacket.ToByteArray(), endpoint);
+                // Console.WriteLine($"Send {(int)x}");
                 packetsSend++;
-                Thread.Sleep(TimeSpan.FromSeconds(1));
+                x += 6000;
             }
-        }, cts.Token);
+        }, TaskCreationOptions.LongRunning);
         
         _stoppingTokens.Add(session, cts);
     }

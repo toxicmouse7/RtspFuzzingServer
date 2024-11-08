@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Hosting;
 using RtspServer.Abstract;
+using RtspServer.Infrastructure;
 using RtspServer.Rtsp;
 using RtspServer.Services;
 
@@ -27,6 +28,10 @@ public class RtspModule : Module
 
         builder.RegisterType<SessionService>()
             .As<ISessionService>()
+            .SingleInstance();
+        
+        builder.RegisterType<NetworkService>()
+            .As<INetworkService>()
             .SingleInstance();
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using RtspServer.Abstract;
+﻿using RtspServer.Abstract;
 using RtspServer.Attributes;
 using RtspServer.Rtsp;
 using RtspServer.RtspResponses;
@@ -13,20 +11,23 @@ public class RtspController : RtspControllerBase
 {
     private readonly ISessionService _sessionService;
     private readonly IRTPStreamingService _rtpStreamingService;
+    private readonly INetworkService _networkService;
 
     public RtspController(
         ISessionService sessionService,
-        IRTPStreamingService rtpStreamingService)
+        IRTPStreamingService rtpStreamingService, 
+        INetworkService networkService)
     {
         _sessionService = sessionService;
         _rtpStreamingService = rtpStreamingService;
+        _networkService = networkService;
     }
     
     [RtspDescribe]
     public IRtspResponse Describe()
     {
         var sdp = new SessionDescriptionProtocol(
-            new Origin(GetLocalIPAddress()),
+            new Origin(_networkService.GetLocalIpAddress()),
             new Media(5050));
         
         return SessionDescriptionProtocol(sdp);
@@ -69,7 +70,10 @@ public class RtspController : RtspControllerBase
 
         _rtpStreamingService.StartRTPStream(session);
         
-        return Ok();
+        return Ok(new Dictionary<string, string>
+        {
+            ["Session"] = session.Id.ToString()
+        });
     }
 
     [RtspTeardown]
@@ -80,19 +84,5 @@ public class RtspController : RtspControllerBase
         _rtpStreamingService.StopRTPStream(session);
         
         return Ok();
-    }
-
-    private static string GetLocalIPAddress() // 91 92 91
-    {
-        var host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (var ipAddress in host.AddressList)
-        {
-            if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
-            {
-                return ipAddress.ToString();
-            }
-        }
-        
-        throw new Exception("Unable to get local ip address.");
     }
 }

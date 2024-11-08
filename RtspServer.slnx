@@ -1,3 +1,4 @@
 ﻿<Solution>
   <Project Path="RtspServer\RtspServer.csproj" Type="Classic C#" />
+  <Project Path="ManagementServer\ManagementServer.csproj" Type="Classic C#" />
 </Solution>
