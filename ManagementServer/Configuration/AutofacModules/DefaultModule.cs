@@ -11,5 +11,13 @@ public class DefaultModule : Module
         builder.RegisterType<StaticDataSource>()
             .As<IDataSource>()
             .SingleInstance();
+        
+        // if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        // {
+        //     builder.RegisterType<MacosWebcamDataSource>()
+        //         .As<IDataSource>()
+        //         .AutoActivate()
+        //         .SingleInstance();
+        // }
     }
 }

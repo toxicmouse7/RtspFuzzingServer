@@ -35,9 +35,8 @@ public class RTPStreamingService : IRTPStreamingService
                 var rtpPacket = new RTPPacket(
                     rtpHeader,
                     await _dataSource.GetStreamableDataAsync());
-                
-                udpClient.Send(rtpPacket.ToByteArray(), endpoint);
-                // Console.WriteLine($"Send {(int)x}");
+                var data = rtpPacket.ToByteArray();
+                udpClient.Send(data, data.Length, endpoint);
                 packetsSend++;
                 x += 6000;
             }

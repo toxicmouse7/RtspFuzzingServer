@@ -1,6 +1,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FFmpeg.AutoGen.Bindings.DynamicallyLoaded;
 using ManagementServer.Configuration;
 using ManagementServer.Configuration.AutofacModules;
 using RtspServer.Configuration.AutofacModules;
@@ -41,6 +42,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(
     });
 
 builder.Services.AddSettings();
+
+DynamicallyLoadedBindings.LibrariesPath = "/opt/ffmpeg/lib";
+DynamicallyLoadedBindings.Initialize();
 
 var app = builder.Build();
 

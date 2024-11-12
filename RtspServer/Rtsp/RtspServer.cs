@@ -36,7 +36,14 @@ public class RtspServer : BackgroundService
             _ = Task.Factory.StartNew(async () =>
             {
                 var rtspClientContext = _rtspConnectionContextFactory(client, stoppingToken);
-                await rtspClientContext.ServeAsync();
+                try
+                {
+                    await rtspClientContext.ServeAsync();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Error happened while serving client: {error}", e.Message);
+                }
             }, stoppingToken);
         }
     }

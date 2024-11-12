@@ -12,7 +12,7 @@ public class RTPHeader
     }
 
     public bool Padding { get; } = false;
-    public bool Extension { get; } = false;
+    public bool Extension { get; } = true;
     public int CSRCCount { get; } = 0;
     public bool Marker { get; } = true;
     public int PayloadType { get; } = 26;
@@ -20,7 +20,7 @@ public class RTPHeader
     public int Timestamp { get; }
     public int SSRCIdentifier { get; } = 0x12121212;
     public int[] CSRC { get; } = null!;
-    public short HeaderExtensionLength { get; } = 0;
+    public short HeaderExtensionLength { get; } = 5000;
 
     public byte[] ToByteArray()
     {

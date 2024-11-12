@@ -6,10 +6,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>ManagementServer</AssemblyName>
         <RootNamespace>ManagementServer</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Contrib.Extensions.Configuration.AutoBind" Version="1.0.0" />
+        <PackageReference Include="FFmpeg.AutoGen.Abstractions" Version="7.0.0" />
+        <PackageReference Include="FFmpeg.AutoGen.Bindings.DynamicallyLoaded" Version="7.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
         <PackageReference Include="Autofac" Version="8.1.1" />
