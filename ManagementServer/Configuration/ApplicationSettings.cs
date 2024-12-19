@@ -7,6 +7,6 @@ public static class ApplicationSettings
 {
     public static void AddSettings(this IServiceCollection services)
     {
-        services.AddOptions<StaticDataSourceSettings>().AutoBind();
+        services.AddOptions<DataSourceSettings>().AutoBind();
     }
 }

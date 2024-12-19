@@ -10,10 +10,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="Contrib.Extensions.Configuration.AutoBind" Version="1.0.0" />
         <PackageReference Include="FFmpeg.AutoGen.Abstractions" Version="7.0.0" />
         <PackageReference Include="FFmpeg.AutoGen.Bindings.DynamicallyLoaded" Version="7.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
         <PackageReference Include="Autofac" Version="8.1.1" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
@@ -30,10 +38,6 @@
 
     <ItemGroup>
       <None Include="AppSettings\appsettings.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Domain\" />
     </ItemGroup>
 
 </Project>

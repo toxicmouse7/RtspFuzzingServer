@@ -1,4 +1,5 @@
 ﻿<Solution>
-  <Project Path="RtspServer\RtspServer.csproj" Type="Classic C#" />
+  <Project Path="ManagementServer.Tests\ManagementServer.Tests.csproj" Type="Classic C#" />
   <Project Path="ManagementServer\ManagementServer.csproj" Type="Classic C#" />
+  <Project Path="RtspServer\RtspServer.csproj" Type="Classic C#" />
 </Solution>
