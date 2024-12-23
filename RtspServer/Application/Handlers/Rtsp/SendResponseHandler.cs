@@ -27,8 +27,20 @@ public class SendResponseHandler : IRequestHandler<SendResponseCommand>
             RtspSetupResponse setupResponse => SendSetupResponse(stream, setupResponse),
             RtspPlayResponse playResponse => SendPlayResponse(stream, playResponse),
             RtspTeardownResponse teardownResponse => SendTeardownResponse(stream, teardownResponse),
+            RtspMethodNotValidResponse methodNotValidResponse => SendMethodNotValidResponse(stream, methodNotValidResponse),
             _ => SendNotImplementedResponse(stream)
         });
+    }
+
+    private async Task SendMethodNotValidResponse(NetworkStream stream, RtspMethodNotValidResponse methodNotValidResponse)
+    {
+        var response = FormatResponse(
+            "RTSP/1.0 455 Method Not Valid in This State",
+            $"CSeq: {methodNotValidResponse.Sequence}");
+        
+        _logger.LogTrace("Sent response: {response}", Encoding.UTF8.GetString(response));
+
+        await stream.WriteAsync(response);
     }
 
     private async Task SendNotImplementedResponse(NetworkStream stream)

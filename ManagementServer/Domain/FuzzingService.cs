@@ -64,7 +64,7 @@ public class FuzzingService : IFuzzingService
             return;
         }
         
-        var cts = new CancellationTokenSource();
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
         _stoppingTokens.Add(session, cts);
 
         await _hubContext.Clients.All.SendAsync("PreFuzz", presets.Count, cancellationToken: cts.Token);
@@ -83,12 +83,12 @@ public class FuzzingService : IFuzzingService
             }
             catch
             {
-                await _hubContext.Clients.All.SendAsync("Error", cancellationToken: cts.Token);
+                await _hubContext.Clients.All.SendAsync("Error", CancellationToken.None);
                 break;
             }
             
-            await _hubContext.Clients.All.SendAsync("PacketSent", index + 1, cancellationToken: cts.Token);
-            await Task.Delay(TimeSpan.FromSeconds(1), cts.Token);
+            await _hubContext.Clients.All.SendAsync("PacketSent", index + 1, CancellationToken.None);
+            await Task.Delay(TimeSpan.FromSeconds(1), CancellationToken.None);
         }
 
         _stoppingTokens.Remove(session, out var token);

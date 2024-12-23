@@ -67,7 +67,8 @@ public class HandleRequestHandler : IRequestHandler<HandleRequestCommand, RtspRe
         {
             return new RtspNotImplementedResponse();
         }
-        
+
+
         var clientPort = setupRequest.Transport
             .First(t => t.StartsWith("client_port"))
             .Replace("client_port=", string.Empty);
@@ -97,7 +98,7 @@ public class HandleRequestHandler : IRequestHandler<HandleRequestCommand, RtspRe
         {
             return new RtspNotImplementedResponse();
         }
-        
+
         var playCommand = new PlayCommand(session);
 
         await _sender.Send(playCommand);

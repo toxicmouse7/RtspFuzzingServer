@@ -15,7 +15,7 @@ public class RemoveRtpPresetHandler : IRequestHandler<RemoveRtpPresetCommand>
     public async Task Handle(RemoveRtpPresetCommand request, CancellationToken cancellationToken)
     {
         var query = _context.RtpFuzzingPresets.Where(x => x.Id == request.PresetId);
-        _context.Remove(query);
+        _context.RemoveRange(query);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

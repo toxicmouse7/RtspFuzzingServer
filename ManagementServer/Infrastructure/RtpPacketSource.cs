@@ -48,6 +48,16 @@ public class RtpPacketSource : IRtpPacketSource
             return value;
         }
     }
+
+    private ushort Sequence
+    {
+        get
+        {
+            var value = _sequenceNumber;
+            _sequenceNumber++;
+            return value;
+        }
+    }
     
     public async Task<RtpPacket> GetPacketAsync()
     {
@@ -65,12 +75,12 @@ public class RtpPacketSource : IRtpPacketSource
 
         if (appendSettings.UseOriginalTimestamp)
         {
-            rtpPacket = rtpPacket with { Header = rtpPacket.Header with { Timestamp = 0 }};
+            rtpPacket = rtpPacket with { Header = rtpPacket.Header with { Timestamp = Timestamp }};
         }
 
         if (appendSettings.UseOriginalSequence)
         {
-            rtpPacket = rtpPacket with { Header = rtpPacket.Header with { Timestamp = 0 }};
+            rtpPacket = rtpPacket with { Header = rtpPacket.Header with { SequenceNumber = Sequence }};
         }
 
         try
@@ -90,11 +100,9 @@ public class RtpPacketSource : IRtpPacketSource
         while (!_stoppingToken.IsCancellationRequested)
         {
             await _semaphore.WaitAsync(_stoppingToken);
-            var rtpHeader = new RtpHeader(false, false, 0, true, 26, _sequenceNumber, Timestamp, 0x12121212, [], 0);
+            var rtpHeader = new RtpHeader(false, false, 0, true, 26, Sequence, Timestamp, 0x12121212, [], 0);
             var rtpJpegHeader = new RtpJpegHeader(0, [0, 0, 0], 1, 99, 90, 60);
             var rtpPacket = new RtpPacket(rtpHeader, rtpJpegHeader, _staticJpeg);
-
-            _sequenceNumber++;
 
             await _rtpPacketsChannel.Writer.WriteAsync(rtpPacket, _stoppingToken);
             _semaphore.Release();

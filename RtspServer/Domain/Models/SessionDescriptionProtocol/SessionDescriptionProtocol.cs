@@ -22,6 +22,7 @@ public class SessionDescriptionProtocol
                $"t={Time}\r\n" +
                $"a=recvonly\r\n" +
                $"m={Media}\r\n" +
-               $"a=rtpmap:26 JPEG/90000\r\n";
+               $"a=rtpmap:26 JPEG/90000\r\n" +
+               $"a=control:rtsp://192.168.50.14/\r\n";
     }
 }
