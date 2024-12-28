@@ -5,26 +5,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ManagementServer.Configuration.EntityConfiguration;
 
-public class RtpFuzzingPresetConfiguration : IEntityTypeConfiguration<RtpFuzzingPreset>
+public class RawFuzzingDataConfiguration : IEntityTypeConfiguration<RawFuzzingData>
 {
-    public void Configure(EntityTypeBuilder<RtpFuzzingPreset> builder)
+    public void Configure(EntityTypeBuilder<RawFuzzingData> builder)
     {
         builder.HasKey(e => e.Id);
-        builder.OwnsOne(e => e.Header);
-        builder.OwnsOne(e => e.AppendSettings);
-
+        
         var valueComparer = new ValueComparer<byte[]>(
             (c1, c2) => c1 != null && c1.SequenceEqual(c2 ?? ArraySegment<byte>.Empty),
             c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
             c => c.ToArray());
         
-        builder.Property(e => e.Payload).HasConversion(
-            payload => payload == null ? null : Convert.ToBase64String(payload),
-            payload => payload == null ? null : Convert.FromBase64String(payload),
+        builder.Property(e => e.RawData).HasConversion(
+            raw => Convert.ToBase64String(raw),
+            raw => Convert.FromBase64String(raw),
             valueComparer);
-
-        builder.HasMany(e => e.RawFuzzingData)
-            .WithOne(e => e.Preset)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

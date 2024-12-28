@@ -16,5 +16,9 @@ public class DefaultModule : Module
         builder.RegisterType<FuzzingService>()
             .As<IFuzzingService>()
             .SingleInstance();
+
+        builder.RegisterType<RtpFuzzingPayloadGeneratorClient>()
+            .As<IRtpFuzzingPayloadGenerator>()
+            .SingleInstance();
     }
 }

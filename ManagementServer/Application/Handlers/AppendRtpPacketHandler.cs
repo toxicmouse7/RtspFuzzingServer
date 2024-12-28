@@ -27,6 +27,6 @@ public class AppendRtpPacketHandler : IRequestHandler<AppendRtpPacketCommand>
         }
         
         var source = await _sourceManager.GetPacketSourceAsync(session) as RtpPacketSource;
-        await source.AppendPacketAsync(rtpPacket, appendSettings);
+        await source!.AppendPacketAsync(rtpPacket, appendSettings);
     }
 }

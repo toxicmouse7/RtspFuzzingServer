@@ -17,4 +17,5 @@ public class RtpFuzzingPreset
     public HeaderType ContentHeaderType { get; protected init; }
     public byte[]? Payload { get; protected init; }
     public AppendSettings AppendSettings { get; protected init; } = null!;
+    public List<RawFuzzingData> RawFuzzingData { get; protected init; } = null!;
 }

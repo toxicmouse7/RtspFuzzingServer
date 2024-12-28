@@ -29,7 +29,7 @@ public class RtpSession
             while (!Token.IsCancellationRequested)
             {
                 var packet = await _packetSource.GetPacketAsync();
-                var sendPacketCommand = new SendRtpPacketCommand(packet, RtspSession.RTPEndPoint);
+                var sendPacketCommand = new SendDataCommand(packet.Serialize(), RtspSession.RTPEndPoint);
                 await _sender.Send(sendPacketCommand, Token);
             }
         }, Token);

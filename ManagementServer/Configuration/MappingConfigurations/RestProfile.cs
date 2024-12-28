@@ -109,6 +109,10 @@ public class RestProfile : Profile
             .ForCtorParam(nameof(RtspServer.Domain.Models.Rtcp.SenderReport.SOC),
                 opt => opt.MapFrom(s => s.SenderOctetsCount))
             .ForAllMembers(opt => opt.Ignore());
+
+        CreateMap<RtpFuzzingPreset, Dto.Rest.Out.RtpFuzzingPreset>()
+            .IncludeBase<RtpFuzzingPreset, Dto.Rest.Out.RTPPacket>()
+            .ForMember(d => d.GeneratedPayloads, opt => opt.MapFrom(s => s.RawFuzzingData.Count));
             
         
         CreateMap<Dto.Rest.SenderReport, RtspServer.Domain.Models.Abstract.RtcpPacket>()

@@ -22,7 +22,10 @@ public class GetFuzzingPresetsHandler
         GetFuzzingPresetsQuery request,
         CancellationToken cancellationToken)
     {
-        var dbPresets = await _context.RtpFuzzingPresets.AsNoTracking().ToListAsync(cancellationToken);
+        var dbPresets = await _context.RtpFuzzingPresets
+            .Include(x => x.RawFuzzingData)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
         return _mapper.Map<IReadOnlyCollection<RtpFuzzingPreset>>(dbPresets);
     }

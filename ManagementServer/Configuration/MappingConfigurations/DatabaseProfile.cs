@@ -13,7 +13,11 @@ public class DatabaseProfile : Profile
                 opt => opt.MapFrom(s => MapContentHeader(s.ContentHeaderType, s.ContentHeader)))
             .ReverseMap()
             .ForMember(d => d.ContentHeader, opt => opt.MapFrom(s => JsonConvert.SerializeObject(s.ContentHeader)))
-            .ForMember(d => d.ContentHeaderType, opt => opt.MapFrom(s => MapContentHeader(s.ContentHeader)));
+            .ForMember(d => d.ContentHeaderType, opt => opt.MapFrom(s => MapContentHeader(s.ContentHeader)))
+            .ForMember(d => d.RawFuzzingData, opt => opt.MapFrom(s => s.RawFuzzingData));
+
+        CreateMap<RawFuzzingData, Domain.Models.RawFuzzingData>()
+            .ReverseMap();
     }
 
     private RtspServer.Domain.Models.Abstract.RtpContentHeader MapContentHeader(HeaderType type, string serializedData)

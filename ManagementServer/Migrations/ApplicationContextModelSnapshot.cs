@@ -17,6 +17,26 @@ namespace ManagementServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
+            modelBuilder.Entity("ManagementServer.Infrastructure.Persistence.Models.RawFuzzingData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PresetId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RawData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PresetId");
+
+                    b.ToTable("RawFuzzingData");
+                });
+
             modelBuilder.Entity("ManagementServer.Infrastructure.Persistence.Models.RtpFuzzingPreset", b =>
                 {
                     b.Property<Guid>("Id")
@@ -36,6 +56,17 @@ namespace ManagementServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RtpFuzzingPresets");
+                });
+
+            modelBuilder.Entity("ManagementServer.Infrastructure.Persistence.Models.RawFuzzingData", b =>
+                {
+                    b.HasOne("ManagementServer.Infrastructure.Persistence.Models.RtpFuzzingPreset", "Preset")
+                        .WithMany("RawFuzzingData")
+                        .HasForeignKey("PresetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Preset");
                 });
 
             modelBuilder.Entity("ManagementServer.Infrastructure.Persistence.Models.RtpFuzzingPreset", b =>
@@ -111,6 +142,11 @@ namespace ManagementServer.Migrations
 
                     b.Navigation("Header")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ManagementServer.Infrastructure.Persistence.Models.RtpFuzzingPreset", b =>
+                {
+                    b.Navigation("RawFuzzingData");
                 });
 #pragma warning restore 612, 618
         }

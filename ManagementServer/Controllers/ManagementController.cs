@@ -98,7 +98,7 @@ public class ManagementController : ControllerBase
     public async Task<IActionResult> GetRtpPresets()
     {
         var presets = await _fuzzingService.GetAllPresetsAsync();
-        return Ok(_mapper.Map<IEnumerable<Dto.Rest.Out.RTPPacket>>(presets));
+        return Ok(_mapper.Map<IEnumerable<Dto.Rest.Out.RtpFuzzingPreset>>(presets));
     }
     
     [HttpDelete("rtp_presets/{presetId:guid}")]
@@ -115,7 +115,7 @@ public class ManagementController : ControllerBase
 
         var domainPreset = await _fuzzingService.AddRtpPresetAsync(preset);
         
-        return Ok(_mapper.Map<Dto.Rest.Out.RTPPacket>(domainPreset));
+        return Ok(_mapper.Map<Dto.Rest.Out.RtpFuzzingPreset>(domainPreset));
     }
 
     [HttpPost("start_rtp_fuzzing")]

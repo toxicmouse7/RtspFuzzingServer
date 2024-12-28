@@ -21,4 +21,10 @@ public class RtpFuzzingPreset
     public RtpContentHeader ContentHeader { get; protected init; }
     public byte[] Payload { get; protected init; }
     public AppendSettings AppendSettings { get; protected init; }
+    public IReadOnlyCollection<RawFuzzingData> RawFuzzingData { get; protected init; } = new List<RawFuzzingData>();
+
+    public void AddRawFuzzingData(IEnumerable<RawFuzzingData> data)
+    {
+        (RawFuzzingData as List<RawFuzzingData>)!.AddRange(data);
+    }
 }
