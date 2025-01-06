@@ -19,7 +19,7 @@ public class RtpFuzzingPayloadGeneratorClient : IRtpFuzzingPayloadGenerator
     public async Task<IReadOnlyCollection<RawFuzzingData>> GenerateRtpPayloadsAsync(
         RtpFuzzingPreset preset, TimeSpan generateFor)
     {
-        var url = "http://192.168.50.244:8080/BinaryPayload/generate"
+        var url = "http://localhost:8080/BinaryPayload/generate"
             .AppendQueryParam("genTimeSec", generateFor.Seconds);
         var packet = _mapper.Map<RtpPacket>(preset);
 

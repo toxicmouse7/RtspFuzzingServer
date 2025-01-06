@@ -64,55 +64,58 @@ public class FuzzingService : IFuzzingService
             await _hubContext.Clients.All.SendAsync("Error");
             return;
         }
-        
+
         var cts = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
         _stoppingTokens.Add(session, cts);
-        
+
         var totalToSend = presets.Sum(p => p.RawFuzzingData.Count);
         var sent = 0;
 
         await _hubContext.Clients.All.SendAsync("PreFuzz", totalToSend, cancellationToken: cts.Token);
         await _hubContext.Clients.All.SendAsync("PacketSent", sent, cancellationToken: cts.Token);
-        
-        foreach (var preset in presets)
+
+        try
         {
-            foreach (var rawData in preset.RawFuzzingData)
+            foreach (var preset in presets)
             {
-                try
+                foreach (var rawData in preset.RawFuzzingData)
                 {
                     if (rawData.RawData.Length < 20)
                     {
+                        sent++;
+                        await _hubContext.Clients.All.SendAsync("PacketSent", sent, CancellationToken.None);
                         continue;
                     }
 
-                    var fuzzingPacket = RtpPacket.Deserialize(rawData.RawData);
+                    try
+                    {
+                        var fuzzingPacket = RtpPacket.Deserialize(rawData.RawData);
 
-                    var appendPacketCommand = new AppendRtpPacketCommand(
-                        session.Id,
-                        fuzzingPacket,
-                        new AppendSettings
-                        {
-                            UseOriginalPayload = fuzzingPacket.Content.Length == 0,
-                            UseOriginalTimestamp = false,
-                            UseOriginalSequence = false
-                        });
-                    await _sender.Send(appendPacketCommand, cts.Token);
+                        var appendPacketCommand = new AppendRtpPacketCommand(
+                            session.Id,
+                            fuzzingPacket,
+                            new AppendSettings
+                            {
+                                UseOriginalPayload = fuzzingPacket.Content.Length == 0,
+                                UseOriginalTimestamp = true,
+                                UseOriginalSequence = true
+                            });
+                        await _sender.Send(appendPacketCommand, cts.Token);
+                    }
+                    catch (Exception e) when (e is not OperationCanceledException and not TaskCanceledException)
+                    {
+                    }
+
+                    sent++;
                     cts.Token.ThrowIfCancellationRequested();
+                    await _hubContext.Clients.All.SendAsync("PacketSent", sent, CancellationToken.None);
+                    await Task.Delay(TimeSpan.FromMilliseconds(150), CancellationToken.None);
                 }
-                catch (Exception e) when (e is TaskCanceledException or OperationCanceledException)
-                {
-                    await _hubContext.Clients.All.SendAsync("Error", CancellationToken.None);
-                    break;
-                }
-                catch
-                {
-                    
-                }
-
-                sent++;
-                await _hubContext.Clients.All.SendAsync("PacketSent", sent, CancellationToken.None);
-                await Task.Delay(TimeSpan.FromSeconds(0.2), CancellationToken.None);
             }
+        }
+        catch (Exception e) when (e is TaskCanceledException or OperationCanceledException)
+        {
+            await _hubContext.Clients.All.SendAsync("Error", CancellationToken.None);
         }
 
         _stoppingTokens.Remove(session, out var token);
@@ -125,7 +128,7 @@ public class FuzzingService : IFuzzingService
         {
             return;
         }
-        
+
         cts.Cancel();
         cts.Dispose();
         _logger.LogDebug("Fuzzing stopped. Session id: {sessionId}", session.Id);
