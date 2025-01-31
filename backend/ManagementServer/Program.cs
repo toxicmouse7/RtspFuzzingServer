@@ -27,7 +27,12 @@ builder.Services.AddSignalR();
 
 var appSettingsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "AppSettings");
 builder.Configuration.SetBasePath(appSettingsPath);
-builder.Configuration.AddJsonFile("appsettings.json", true, true);
+builder.Configuration.AddJsonFile("appsettings.json");
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddJsonFile("appsettings.Development.json", true);
+}
 
 builder.Services.AddLogging(config =>
 {
