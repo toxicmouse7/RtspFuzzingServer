@@ -1,0 +1,11 @@
+﻿services:
+  rtppayloadgenerator:
+    image: rtppayloadgenerator
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
+      - AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
+    build:
+      context: .
+      dockerfile: RtpPayloadGenerator/Dockerfile
