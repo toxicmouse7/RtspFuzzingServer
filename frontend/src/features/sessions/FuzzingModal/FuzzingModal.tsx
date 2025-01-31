@@ -20,6 +20,7 @@ const FuzzingModal = () => {
         sessionId = useAppSelector(selectCurrentSessionId),
         [totalToSend, setTotalToSend] = useState<number>(),
         [error, setError] = useState(false),
+        [lastSentPackets, setLastSentPackets] = useState<never[]>([]),
         [packetsSent, setPacketsSent] = useState<number>(0);
 
     const
@@ -67,7 +68,10 @@ const FuzzingModal = () => {
         },
         {
             method: "Error",
-            callback: () => setError(true)
+            callback: (lastSentPackets: never[]) => {
+                setError(true);
+                setLastSentPackets(lastSentPackets);
+            }
         }
     ])
 
@@ -106,7 +110,14 @@ const FuzzingModal = () => {
                 {totalToSend === undefined ? loader : body}
                 {
                     error &&
-                    <span>Failed on {packetsSent}</span>
+                    <>
+                        <span>Failed on {packetsSent}</span>
+                        {lastSentPackets.map((item, index) => (
+                            <div style={{maxWidth: "400px", fontSize: "16px"}} key={index}>
+                                {JSON.stringify(item, null, 4)}
+                            </div>
+                        ))}
+                    </>
                 }
             </div>
         </Modal>

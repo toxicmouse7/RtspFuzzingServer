@@ -57,6 +57,7 @@ public class FuzzingService : IFuzzingService
     {
         var getPresetsQuery = new GetFuzzingPresetsQuery();
         var presets = await _sender.Send(getPresetsQuery);
+        var lastSentPackets = new Queue<RtpPacket>();
 
         var session = await _sender.Send(new GetSessionQuery(sessionId));
         if (session is null)
@@ -100,6 +101,13 @@ public class FuzzingService : IFuzzingService
                                 UseOriginalTimestamp = true,
                                 UseOriginalSequence = true
                             });
+                        lastSentPackets.Enqueue(fuzzingPacket);
+
+                        if (lastSentPackets.Count > 10)
+                        {
+                            lastSentPackets.Dequeue();
+                        }
+                        
                         await _sender.Send(appendPacketCommand, cts.Token);
                     }
                     catch (Exception e) when (e is not OperationCanceledException and not TaskCanceledException)
@@ -115,7 +123,7 @@ public class FuzzingService : IFuzzingService
         }
         catch (Exception e) when (e is TaskCanceledException or OperationCanceledException)
         {
-            await _hubContext.Clients.All.SendAsync("Error", CancellationToken.None);
+            await _hubContext.Clients.All.SendAsync("Error", lastSentPackets, CancellationToken.None);
         }
 
         _stoppingTokens.Remove(session, out var token);
