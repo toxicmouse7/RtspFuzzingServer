@@ -41,6 +41,8 @@ public class RtspServer : IHostedService
         while (!token.IsCancellationRequested)
         {
             var client = await _server.AcceptTcpClientAsync(token);
+            
+            _logger.LogInformation("Client connected. Client EP: {ep}", client.Client.RemoteEndPoint);
 
             await _publisher.Publish(new ClientConnectedNotification(client), token);
         }
