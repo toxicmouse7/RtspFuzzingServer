@@ -23,6 +23,6 @@ public class SessionDescriptionProtocol
                $"a=recvonly\r\n" +
                $"m={Media}\r\n" +
                $"a=rtpmap:26 JPEG/90000\r\n" +
-               $"a=control:rtsp://{Origin.Address}/\r\n";
+               $"a=control:rtsp://{Origin.Address}:554/\r\n";
     }
 }
