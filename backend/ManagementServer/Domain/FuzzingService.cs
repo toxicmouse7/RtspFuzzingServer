@@ -55,6 +55,7 @@ public class FuzzingService : IFuzzingService
 
     public async Task StartFuzzingAsync(long sessionId)
     {
+        _logger.LogInformation("Start fuzzing for session {sessionId}", sessionId);
         var getPresetsQuery = new GetFuzzingPresetsQuery();
         var presets = await _sender.Send(getPresetsQuery);
         var lastSentPackets = new Queue<RtpPacket>();
@@ -71,6 +72,8 @@ public class FuzzingService : IFuzzingService
 
         var totalToSend = presets.Sum(p => p.RawFuzzingData.Count);
         var sent = 0;
+        
+        _logger.LogInformation("Total packets to send: {toSend}. Session id: {sessionId}", totalToSend, session.Id);
 
         await _hubContext.Clients.All.SendAsync("PreFuzz", totalToSend, cancellationToken: cts.Token);
         await _hubContext.Clients.All.SendAsync("PacketSent", sent, cancellationToken: cts.Token);
@@ -117,6 +120,7 @@ public class FuzzingService : IFuzzingService
                     sent++;
                     cts.Token.ThrowIfCancellationRequested();
                     await _hubContext.Clients.All.SendAsync("PacketSent", sent, CancellationToken.None);
+                    _logger.LogInformation("Packet sent: {toSend}. Session id: {sessionId}", sent, session.Id);
                     await Task.Delay(TimeSpan.FromMilliseconds(150), CancellationToken.None);
                 }
             }
