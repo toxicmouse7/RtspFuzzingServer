@@ -52,3 +52,8 @@ while (sent != totalPacketsToSend)
 {
     await Task.Delay(1000);
 }
+
+await apiAddress
+    .AppendPathSegments("Management", "sessions")
+    .AppendQueryParam("sessionId", testSession.Id)
+    .DeleteAsync();
