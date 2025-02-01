@@ -1,4 +1,5 @@
-﻿using Flurl;
+﻿using System.Text.Json;
+using Flurl;
 using Flurl.Http;
 using Microsoft.AspNetCore.SignalR.Client;
 using TestUtility;
@@ -24,9 +25,13 @@ fuzzingHub.On<int>("PacketSent", val =>
     sent = val;
 });
 
-fuzzingHub.On("Error", () =>
+fuzzingHub.On("Error", (IEnumerable<RtpPacket> lastSentPackets) =>
 {
     Console.Error.WriteLine("Failed");
+    Console.Error.WriteLine(JsonSerializer.Serialize(lastSentPackets, new JsonSerializerOptions
+    {
+        WriteIndented = true
+    }));
     Environment.Exit(-1);
 });
 

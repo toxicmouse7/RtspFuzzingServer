@@ -41,6 +41,9 @@
 
     <ItemGroup>
       <None Include="AppSettings\appsettings.json" />
+      <None Update="rtsp.db">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
